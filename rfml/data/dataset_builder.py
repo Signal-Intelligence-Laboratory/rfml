@@ -49,7 +49,7 @@ class DatasetBuilder(object):
     def __init__(
         self,
         n: int = None,
-        keys: Set[str] = None,
+        #keys: Set[str] = None,
         defaults: Dict[str, Union[str, int, float]] = dict(),
     ):
         if n is not None and n <= 0:
@@ -57,21 +57,21 @@ class DatasetBuilder(object):
                 "The number of time samples for the Dataset must be non-negative "
                 "({})".format(n)
             )
-        if (
-            keys is not None
-            and defaults is not None
-            and not set(defaults.keys()).issubset(set(keys))
-        ):
-            raise ValueError(
-                "The keys of the defaults must be a subset of the required keys "
-                "provided."
-            )
+        # if (
+        #     keys is not None
+        #     and defaults is not None
+        #     and not set(defaults.keys()).issubset(set(keys))
+        # ):
+        #     raise ValueError(
+        #         "The keys of the defaults must be a subset of the required keys "
+        #         "provided."
+        #     )
 
         self._n = n
-        self._keys = None
-        if keys is not None:
-            # Allows a list input by silently converting it to a set
-            self._keys = set(keys).union(set(["I", "Q"]))
+        #self._keys = None
+        # if keys is not None:
+        #     # Allows a list input by silently converting it to a set
+        #     self._keys = set(keys).union(set(["I", "Q"]))
         self._defaults = defaults
 
         self._rows = list()
@@ -114,13 +114,13 @@ class DatasetBuilder(object):
             )
 
         # Construct the desired keys if they haven't already been
-        if self._keys is None:
-            self._keys = set(kwargs.keys())
-            self._keys = self._keys.union(set(["I", "Q"]))
-            self._keys = self._keys.union(set(self._defaults.keys()))
+        # if self._keys is None:
+        #     self._keys = set(kwargs.keys())
+        #     self._keys = self._keys.union(set(["I", "Q"]))
+        #     self._keys = self._keys.union(set(self._defaults.keys()))
 
-        for key in kwargs:
-            self._metadata[key].add(kwargs[key])
+        # for key in kwargs:
+        #     self._metadata[key].add(kwargs[key])
 
         # Construct the actual row candidate
         row = dict()
@@ -133,20 +133,20 @@ class DatasetBuilder(object):
 
         # Verify that all of the necessary keys, and only those, are going to be
         # added into the dataset.
-        keys = set(row.keys())
-        missing = self._keys - keys
-        extras = keys - self._keys
+        # keys = set(row.keys())
+        # missing = self._keys - keys
+        # extras = keys - self._keys
 
-        if len(missing) != 0:
-            raise ValueError(
-                "The added example is missing {} keys from the metadata that should be "
-                "provided ({}).".format(len(missing), missing)
-            )
-        if len(extras) != 0:
-            raise ValueError(
-                "The added example has {} additional keys in the metadata that the "
-                "other examples did not ({}).".format(len(extras), extras)
-            )
+        # if len(missing) != 0:
+        #     raise ValueError(
+        #         "The added example is missing {} keys from the metadata that should be "
+        #         "provided ({}).".format(len(missing), missing)
+        #     )
+        # if len(extras) != 0:
+        #     raise ValueError(
+        #         "The added example has {} additional keys in the metadata that the "
+        #         "other examples did not ({}).".format(len(extras), extras)
+        #     )
 
         self._rows.append(row)
 
@@ -158,5 +158,5 @@ class DatasetBuilder(object):
         Returns:
             Dataset: A compiled dataset consisting of the added examples.
         """
-        df = pd.DataFrame(self._rows, columns=list(self._keys))
+        df = pd.DataFrame(self._rows)
         return Dataset(df, metadata=self._metadata)
