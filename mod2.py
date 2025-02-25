@@ -94,7 +94,7 @@ print(cnnmodel)
 
 # And now train it
 
-trainer = StandardTrainingStrategy(gpu=gpu)
+trainer = StandardTrainingStrategy(max_epochs=3, gpu=gpu)
 print(trainer)
 
 train_loss, val_loss = trainer(model=cnnmodel,
