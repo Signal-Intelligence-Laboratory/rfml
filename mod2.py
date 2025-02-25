@@ -30,3 +30,56 @@ dataset = load_RML201610A_dataset(path=data_path)
 print(len(dataset))
 pprint(dataset.get_examples_per_class())
 
+train, test = dataset.split(frac=0.3, on=["Modulation", "SNR"])
+train, val = train.split(frac=0.05, on=["Modulation", "SNR"])
+
+print()
+print("Training Examples")
+print("=================")
+pprint(train.get_examples_per_class())
+print("=================")
+print()
+print("Validation Examples")
+print("=================")
+pprint(val.get_examples_per_class())
+print("=================")
+print()
+print("Testing Examples")
+print("=================")
+pprint(test.get_examples_per_class())
+print("=================")
+
+le = Encoder(["WBFM",
+              "AM-DSB",
+              "AM-SSB",
+              "CPFSK",
+              "GFSK",
+              "BPSK",
+              "QPSK",
+              "8PSK",
+              "PAM4",
+              "QAM16",
+              "QAM64"],
+             label_name="Modulation")
+print(le)
+
+
+# Plot a sample of the data
+# You can choose a different sample by changing
+idx = 10
+snr = 18.0
+modulation = "CPFSK"
+
+mask = (dataset.df["SNR"] == snr) & (dataset.df["Modulation"] == modulation)
+sample = dataset.as_numpy(mask=mask, le=le)[0][idx,0,:]
+t = np.arange(sample.shape[1])
+
+title = "{modulation} Sample at {snr:.0f} dB SNR".format(modulation=modulation, snr=snr)
+fig = plot_IQ(iq=sample, title=title)
+if fig_dir is not None:
+    file_path = "{fig_dir}/{modulation}_{snr:.0f}dB_sample.pdf".format(fig_dir=fig_dir,
+                                                                       modulation=modulation,
+                                                                       snr=snr)
+    print("Saving Figure -> {file_path}".format(file_path=file_path))
+    fig.savefig(file_path, format="pdf", transparent=True)
+plt.show()
