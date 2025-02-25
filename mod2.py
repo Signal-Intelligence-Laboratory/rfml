@@ -19,7 +19,8 @@ from rfml.data.converters import load_RML201610A_dataset
 from rfml.nbutils import plot_acc_vs_snr, plot_confusion, plot_convergence, plot_IQ
 
 from rfml.nn.eval import compute_accuracy, compute_accuracy_on_cross_sections, compute_confusion
-from rfml.nn.model import Model
+from rfml.nn.model import Model, CNN
+from rfml.nn.train import StandardTrainingStrategy
 
 
 gpu = True       # Set to True to use a GPU for training
@@ -83,3 +84,30 @@ if fig_dir is not None:
     print("Saving Figure -> {file_path}".format(file_path=file_path))
     fig.savefig(file_path, format="pdf", transparent=True)
 plt.show()
+
+
+# Now we create the CNN model
+# I am not copying and pasting this code from the module because it is all handled in the class CNN
+
+cnnmodel = CNN(input_samples=128, n_classes=11)
+print(cnnmodel)
+
+# And now train it
+
+trainer = StandardTrainingStrategy(gpu=gpu)
+print(trainer)
+
+train_loss, val_loss = trainer(model=cnnmodel,
+                               training=train,
+                               validation=val,
+                               le=le)
+
+# # And plot the training results
+# title = "Training Results of {model_name} on {dataset_name}".format(model_name="MyCNN", dataset_name="RML2016.10A")
+# fig = plot_convergence(train_loss=train_loss, val_loss=val_loss, title=title)
+# if fig_dir is not None:
+#     file_path = "{fig_dir}/training_loss.pdf"
+#     print("Saving Figure -> {file_path}".format(file_path=file_path))
+#     fig.savefig(file_path, format="pdf", transparent=True)
+# plt.show()
+
