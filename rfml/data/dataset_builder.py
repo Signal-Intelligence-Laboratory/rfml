@@ -11,6 +11,9 @@ from collections import defaultdict
 # Internal Includes
 from .dataset import Dataset
 
+# ALL INSTANCES OF KEYS COMMENTED OUT
+# DATASET IS READ ENTIRELY AS A DATASET BY PANDAS
+
 
 class DatasetBuilder(object):
     """Builder pattern for programmatic creation of a Dataset
