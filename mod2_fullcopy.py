@@ -253,5 +253,36 @@ train_loss, val_loss = trainer(model=model,
                                validation=val,
                                le=le)
 
+title = "Training Results of {model_name} on {dataset_name}".format(model_name="MyCNN", dataset_name="RML2016.10A")
+fig = plot_convergence(train_loss=train_loss, val_loss=val_loss, title=title)
+if fig_dir is not None:
+    file_path = "{fig_dir}/training_loss.pdf"
+    print("Saving Figure -> {file_path}".format(file_path=file_path))
+    fig.savefig(file_path, format="pdf", transparent=True)
+plt.show()
 
+acc = compute_accuracy(model=model, data=test, le=le)
+print("Overall Testing Accuracy: {:.4f}".format(acc))
 
+acc_vs_snr, snr = compute_accuracy_on_cross_sections(model=model,
+                                                     data=test,
+                                                     le=le,
+                                                     column="SNR")
+
+title = "Accuracy vs SNR of {model_name} on {dataset_name}".format(model_name="MyCNN", dataset_name="RML2016.10A")
+fig = plot_acc_vs_snr(acc_vs_snr=acc_vs_snr, snr=snr, title=title)
+if fig_dir is not None:
+    file_path = "{fig_dir}/acc_vs_snr.pdf"
+    print("Saving Figure -> {file_path}".format(file_path=file_path))
+    fig.savefig(file_path, format="pdf", transparent=True)
+plt.show()
+
+cmn = compute_confusion(model=model, data=test, le=le)
+
+title = "Confusion Matrix of {model_name} on {dataset_name}".format(model_name="MyCNN", dataset_name="RML2016.10A")
+fig = plot_confusion(cm=cmn, labels=le.labels, title=title)
+if fig_dir is not None:
+    file_path = "{fig_dir}/confusion_matrix.pdf"
+    print("Saving Figure -> {file_path}".format(file_path=file_path))
+    fig.savefig(file_path, format="pdf", transparent=True)
+plt.show()
