@@ -19,8 +19,8 @@ from rfml.data.converters import load_RML201610A_dataset
 from rfml.nbutils import plot_acc_vs_snr, plot_confusion, plot_convergence, plot_IQ
 
 from rfml.nn.eval import compute_accuracy, compute_accuracy_on_cross_sections, compute_confusion
-from rfml.nn.model import Model, CNN
-from rfml.nn.train import StandardTrainingStrategy
+from rfml.nn.model import CNN, build_model
+from rfml.nn.train import StandardTrainingStrategy, build_trainer
 
 
 gpu = True       # Set to True to use a GPU for training
@@ -89,12 +89,14 @@ plt.show()
 # Now we create the CNN model
 # I am not copying and pasting this code from the module because it is all handled in the class CNN
 
-cnnmodel = CNN(input_samples=128, n_classes=11)
+#cnnmodel = CNN(input_samples=128, n_classes=11)
+cnnmodel = build_model("CNN", input_samples=128, n_classes=11)
 print(cnnmodel)
 
 # And now train it
 
-trainer = StandardTrainingStrategy(max_epochs=3, gpu=gpu)
+#trainer = StandardTrainingStrategy(max_epochs=3, gpu=gpu)
+trainer = build_trainer("standard", max_epochs=3, gpu=gpu)
 print(trainer)
 
 train_loss, val_loss = trainer(model=cnnmodel,
