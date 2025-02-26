@@ -4,14 +4,14 @@ __author__ = "Bryse Flowers <brysef@vt.edu>"
 
 # External Includes
 from torch.autograd import Variable
-from torch.nn import CrossEntropyLoss, Module
+from torch.nn import CrossEntropyLoss
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 
 # Internal Includes
 from .base import TrainingStrategy
 from rfml.data import Dataset, Encoder
-from rfml.nn.model import Model, CNN
+from rfml.nn.model import Model
 
 
 class StandardTrainingStrategy(TrainingStrategy):
@@ -74,7 +74,7 @@ class StandardTrainingStrategy(TrainingStrategy):
         self.gpu = gpu
 
     def __call__(
-        self, model: Module, training: Dataset, validation: Dataset, le: Encoder # changed to Module from Model due to import?
+        self, model: Model, training: Dataset, validation: Dataset, le: Encoder
     ):
         """Train the model on the provided training data.
 
