@@ -23,7 +23,7 @@ from rfml.nbutils import plot_acc_vs_snr, plot_confusion, plot_convergence, plot
 
 from rfml.nn.eval import compute_accuracy, compute_accuracy_on_cross_sections, compute_confusion
 from rfml.nn.model import CNN, build_model
-from rfml.nn.train import StandardTrainingStrategy, build_trainer
+from rfml.nn.train.standard_with_listeners import StandardWithListeners
 
 
 gpu = True       # Set to True to use a GPU for training
@@ -72,7 +72,7 @@ print(le)
 # You can choose a different sample by changing
 idx = 10
 snr = 18.0
-modulation = "CPFSK"
+modulation = "8PSK"
 
 mask = (dataset.df["SNR"] == snr) & (dataset.df["Modulation"] == modulation)
 sample = dataset.as_numpy(mask=mask, le=le)[0][idx,0,:]
@@ -98,14 +98,15 @@ print(cnnmodel)
 
 # And now train it
 
-#trainer = StandardTrainingStrategy(max_epochs=3, gpu=gpu)
-trainer = build_trainer("standard", max_epochs=3, gpu=gpu)
+trainer = StandardWithListeners(max_epochs=3, gpu=gpu)
+#trainer = build_trainer("standard", max_epochs=3, gpu=gpu)
 print(trainer)
 
-train_loss, val_loss = trainer(model=cnnmodel,
-                               training=train,
-                               validation=val,
-                               le=le)
+trainer(model=cnnmodel,
+        training=train,
+        validation=val,
+        le=le)
+# keep in mind if i want trainer to actually have outputs to like graph, need to make a new training listener (printing_training_listener only prints to stdout)
 
 # # And plot the training results
 # title = "Training Results of {model_name} on {dataset_name}".format(model_name="MyCNN", dataset_name="RML2016.10A")
