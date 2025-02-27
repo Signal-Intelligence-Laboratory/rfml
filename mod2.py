@@ -1,3 +1,6 @@
+# MAIN POINT OF THIS BRANCH IS TO FIND OUT WHY THIS CODE WON'T WORK
+# Having issues with the trainer function
+
 # Plotting Includes
 import matplotlib.pyplot as plt
 import seaborn as sns
