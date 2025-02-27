@@ -216,5 +216,5 @@ class StandardWithListeners(TrainingStrategy):
         #     listener.on_training_completed(
         #         best_loss=best_loss, best_epoch=best_epoch, total_epochs=total_epochs
         #     )
-        PrintingTrainingListener.on_training_completed(self._listeners[2], best_epoch=best_epoch, total_epochs=total_epochs)
+        PrintingTrainingListener.on_training_completed(self._listeners[2], best_loss=best_loss, best_epoch=best_epoch, total_epochs=total_epochs)
 
