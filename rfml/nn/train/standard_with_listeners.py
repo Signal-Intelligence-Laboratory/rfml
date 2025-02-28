@@ -111,6 +111,10 @@ class StandardWithListeners(TrainingStrategy):
             validation.as_torch(le=le), shuffle=True, batch_size=self.batch_size
         )
 
+        # keep lists of val and train loss to graph later
+        list_train_loss = list()
+        list_val_loss = list()
+
         # Fit the data for the maximum number of epochs, bailing out early if
         # the early stopping condition is reached.  Set the initial "best" very
         # high so the first epoch is always an improvement
@@ -122,11 +126,13 @@ class StandardWithListeners(TrainingStrategy):
                 model=model, data=train_data, loss_fn=criterion, optimizer=optimizer
             )
             self._dispatch_epoch_completed(mean_loss=train_loss, epoch=epoch)
+            list_train_loss.append(train_loss)
 
             val_loss = self._validate_once(
                 model=model, data=val_data, loss_fn=criterion
             )
             self._dispatch_validation_completed(mean_loss=val_loss, epoch=epoch)
+            list_val_loss.append(val_loss)
 
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
@@ -144,6 +150,7 @@ class StandardWithListeners(TrainingStrategy):
         self._dispatch_training_completed(
             best_loss=best_val_loss, best_epoch=best_epoch, total_epochs=epoch
         )
+        return list_train_loss, list_val_loss
 
     def _train_one_epoch(
         self, model: Model, data: DataLoader, loss_fn: CrossEntropyLoss, optimizer: Adam
@@ -200,21 +207,11 @@ class StandardWithListeners(TrainingStrategy):
         return mean_loss
     
     def _dispatch_epoch_completed(self, mean_loss: float, epoch: int):
-        # for listener in self._listeners:
-        #     listener.on_epoch_completed(mean_loss=mean_loss, epoch=epoch)
         PrintingTrainingListener.on_epoch_completed(self._listeners[0], mean_loss=mean_loss, epoch=epoch)
 
     def _dispatch_validation_completed(self, mean_loss: float, epoch: int):
-        # for listener in self._listeners:
-        #     listener.on_validation_completed(mean_loss=mean_loss, epoch=epoch)
         PrintingTrainingListener.on_validation_completed(self._listeners[1], mean_loss=mean_loss, epoch=epoch)
 
-    def _dispatch_training_completed(
-        self, best_loss: float, best_epoch: int, total_epochs: int
-    ):
-        # for listener in self._listeners:
-        #     listener.on_training_completed(
-        #         best_loss=best_loss, best_epoch=best_epoch, total_epochs=total_epochs
-        #     )
+    def _dispatch_training_completed(self, best_loss: float, best_epoch: int, total_epochs: int):
         PrintingTrainingListener.on_training_completed(self._listeners[2], best_loss=best_loss, best_epoch=best_epoch, total_epochs=total_epochs)
 
