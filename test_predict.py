@@ -32,40 +32,14 @@ trainer(model=model, training=train, validation=val, le=le)
 file = np.fromfile(file="/home/garrett/PlutoSDR-20250304_142236-88_9MHz-2_1MSps-2_1MHz.complex", dtype=np.float32)
 
 print(file)
-tensor_from_file = torch.tensor(file)
+tensor_from_file = torch.tensor(file) # convert file to be a tensor
 
-model_pass = model(tensor_from_file)
+model_pass = model(tensor_from_file) # pass the tensor through the model
+# above curretnly throwing errors for the format of the tensor
 
 
-prediction = torch.argmax(model_pass, dim=1) # place file with single recorded radio file here
+prediction = torch.argmax(model_pass, dim=1)
 print(prediction)
 print("Done")
 
-# when viewing the base.py predict() implementation, it takes in a torch.Tensor and returns a torch.Tensor
-# the input can be a torch.complex64 taken from the array of the .complex type from URH (.complex is of type np.complex64)
-# the output is a 1d array with the prediction (will be an int, taken from init of onehot)
 
-#print(prediction)
-
-
-
-
-# acc = compute_accuracy(model=model, data=test, le=le)
-# acc_vs_snr, snr = compute_accuracy_on_cross_sections(
-#     model=model, data=test, le=le, column="SNR"
-# )
-# cmn = compute_confusion(model=model, data=test, le=le)
-
-# # Calls to a plotting function could be inserted here
-# # For simplicity, this script only prints the contents as an example
-# print("===============================")
-# print("Overall Testing Accuracy: {:.4f}".format(acc))
-# print("SNR (dB)\tAccuracy (%)")
-# print("===============================")
-# for acc, snr in zip(acc_vs_snr, snr):
-#     print("{snr:d}\t{acc:0.1f}".format(snr=snr, acc=acc * 100))
-# print("===============================")
-# print("Confusion Matrix:")
-# print(cmn)
-
-#model.save("cnn.pt")
