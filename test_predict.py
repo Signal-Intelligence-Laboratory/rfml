@@ -1,15 +1,21 @@
 # Most of this taken from /examples/signal_classification.py
 # Edited to fit new dataset
+
+
+# Plotting Includes
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set_style("whitegrid")
+
+# External
 import torch
 import pandas as pd
 import numpy as np
 
+# Internal
 from rfml.data import build_dataset, DatasetBuilder
-from rfml.nn.eval import (
-    compute_accuracy,
-    compute_accuracy_on_cross_sections,
-    compute_confusion,
-)
+from rfml.nn.eval import compute_accuracy
+from rfml.nbutils import plot_acc_vs_snr, plot_confusion, plot_convergence, plot_IQ
 from rfml.nn.model import build_model
 from rfml.nn.train import build_trainer, PrintingTrainingListener
 
@@ -40,6 +46,19 @@ builder = DatasetBuilder()
 for x in splitfile:
     reshape_x = np.reshape(x, (2, 128))
     builder.add(reshape_x, Modulation="WBFM")
+
+
+# Would like to be able to plot this IQ data
+
+# file_len_half = file.size / 2
+# file_len_half = int(file_len_half)
+
+# reshape_new = np.reshape(file, (2, file_len_half))
+
+
+# title = "{modulation} Sample".format(modulation="WBFM")
+# fig = plot_IQ(iq=reshape_new, title=title)
+# plt.show()
 
 
 dataset = builder.build()
