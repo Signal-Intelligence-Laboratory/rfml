@@ -65,9 +65,30 @@ class SingleSignalDataLoader(object):
         return arr
 
     
-    # def partition(self, nsamps=int):
+    def partition(self, arr: np.ndarray, split_len=128) -> np.ndarray:
+        if (split_len * 2) > (arr.size / 2):
+            raise ValueError(
+                f"It is impossible for your array of length {arr.size} to be split into more than one array of size {split_len}."
+                "Please choose a new split length."
+            )
+        
+        cut_samps = (arr.size % (split_len * 2)) / 2 # divided by two because everything is doubled (I and Q together) by arr.size but deletion is going to happen in half size
 
-    # for partition, use a modulo function to find number of samples to be cut off, and cut an even amount off the front and back
+        if cut_samps % 2 != 0 :
+            cut_back = int((cut_samps - 1) / 2)
+            cut_front = int(cut_back + 1)
+
+            arr = np.delete(arr, np.s_[(arr.size - cut_back - 1):(arr.size - 1):1], axis=1) # delete the back excess samples
+            arr = np.delete(arr, np.s_[0:(cut_front - 1):1]) # delete front excess samples
+        else :
+            cut = int(cut_samps / 2)
+            arr = np.delete(arr, np.s_[(arr.size - cut - 1):(arr.size - 1):1], axis=1) # delete the back excess samples
+            arr = np.delete(arr, np.s_[0:(cut - 1):1]) # delete front excess samples
+
+
+        split_arr = np.hsplit(arr, (arr.size / (split_len * 2)))
+
+        return split_arr
 
 
 
