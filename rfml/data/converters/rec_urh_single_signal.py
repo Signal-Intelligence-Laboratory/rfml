@@ -56,6 +56,7 @@ class SingleSignalDataLoader(object):
 
     """
     Takes in a 1-D NDArray[] of IQ samples and converts it to be 2-D with I and Q in separate arrays at the same index.
+    This is a direct copy from how URH does this conversion
     """
     def ndarr_to_iq(self, arr: np.ndarray) -> np.ndarray:
         if len(arr) % 2 == 0:
