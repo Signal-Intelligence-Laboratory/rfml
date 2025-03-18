@@ -73,7 +73,6 @@ class SingleSignalDataLoader(object):
             )
         
         cut_samps = int((arr.size % (split_len * 2)) / 2) # divided by two because everything is doubled (I and Q together) by arr.size but deletion is going to happen in half size
-        print(cut_samps)
 
         # check if there is an odd amount of samples to cut
         if cut_samps % 2 == 1:
