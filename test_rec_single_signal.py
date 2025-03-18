@@ -6,9 +6,14 @@ sns.set_style("whitegrid")
 import numpy as np
 
 from rfml.nbutils import plot_IQ
-from rfml.data.converters.rec_single_signal import SingleSignalDataLoader
+from rfml.data.converters.rec_urh_single_signal import SingleSignalDataLoader
 
 sig = SingleSignalDataLoader()
+
+
+# TODO: check that the load() function from SingleSignalDataLoader can load from any of the formats properly
+
+
 
 # Test with set array
 # arr = np.array([[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
@@ -26,12 +31,14 @@ sig = SingleSignalDataLoader()
 # Test with file
 file = np.fromfile(file="/home/garrett/PlutoSDR-20250304_142236-88_9MHz-2_1MSps-2_1MHz.complex", dtype=np.float32)
 
-
+# convert the 1d array to a 2d array
 file = sig.ndarr_to_iq(file)
+
 # returns a list of views of the array partitioned into sections of the determined length
 file = sig.partition(file, 128)
 
-print(file[0])
+
+print(file.__len__())
 
 
 # Graph the IQ data
