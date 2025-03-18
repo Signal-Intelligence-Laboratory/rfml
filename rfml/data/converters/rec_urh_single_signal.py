@@ -67,10 +67,10 @@ class SingleSignalDataLoader(object):
 
     
     def partition(self, arr: np.ndarray, split_len=128) -> np.ndarray:
-        if (split_len * 2) > (arr.size):
+        if split_len > (arr.size / 2):
             raise ValueError(
-                f"Your array is of length {arr.size / 2} which is greater than your chosen split length of {split_len}. "
-                "Please choose a new split length."
+                f"Your array is of length {arr.size / 2} which is less than your chosen split length of {split_len}. "
+                "Please choose a smaller split length."
             )
         
         cut_samps = int((arr.size % (split_len * 2)) / 2) # divided by two because everything is doubled (I and Q together) by arr.size but deletion is going to happen in half size
