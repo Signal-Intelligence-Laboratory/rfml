@@ -15,7 +15,7 @@ sig = SingleSignalDataLoader()
 
 
 
-# Test with set array
+# TEST WITH A SET ARRAY
 # arr = np.array([[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 #               [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]])
 
@@ -28,8 +28,8 @@ sig = SingleSignalDataLoader()
 # plt.show()
 
 
-# Test with file
-file = np.fromfile(file="/home/garrett/PlutoSDR-20250304_142236-88_9MHz-2_1MSps-2_1MHz.complex", dtype=np.float32)
+# TEST WITH A .COMPLEX FILE
+file = sig.load("/home/garrett/PlutoSDR-20250304_142236-88_9MHz-2_1MSps-2_1MHz.complex")
 
 # convert the 1d array to a 2d array
 file = sig.ndarr_to_iq(file)
