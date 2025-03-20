@@ -48,7 +48,7 @@ class SingleSignalDataLoader(object):
         elif path.endswith(".complex16s") or path.endswith(".cs8"):
             return np.fromfile(path, dtype=np.int8)
         elif path.endswith(".complex32u") or path.endswith(".cu16"):
-            return np.fromfile(path, dtype=np.uint16).conver
+            return np.fromfile(path, dtype=np.uint16)
         elif path.endswith(".complex32s") or path.endswith(".cs16"):
             return np.fromfile(path, dtype=np.int16)
         else:
