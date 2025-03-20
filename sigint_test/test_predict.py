@@ -4,14 +4,17 @@ import torch
 import pandas as pd
 import numpy as np
 
+# Include sys to use modules
+import sys
+sys.path.insert(0, "/home/garrett/Code/rfml")
+
 from rfml.data import build_dataset, DatasetBuilder
 from rfml.nn.eval import (
     compute_accuracy,
-    compute_accuracy_on_cross_sections,
-    compute_confusion,
 )
 from rfml.nn.model import build_model
 from rfml.nn.train import build_trainer, PrintingTrainingListener
+from rfml.data.converters.rec_urh_single_signal import SingleSignalDataLoader 
 
 train, val, test, le = build_dataset(dataset_name="RML2016.10a", path="/home/garrett/RML2016.10a/RML2016.10a_dict.pkl")
 
@@ -29,18 +32,21 @@ trainer.register_listener(PrintingTrainingListener())
 trainer(model=model, training=train, validation=val, le=le)
 
 # Load in file
-file = np.fromfile(file="/home/garrett/PlutoSDR-20250304_142236-88_9MHz-2_1MSps-2_1MHz.complex", dtype=np.float32)
+file = np.fromfile(file="/home/garrett/Code/stdout.dat", dtype=np.float32)
+
+sig = SingleSignalDataLoader()
 
 # Split file into 
-partitions = file.size / 256
-splitfile = np.split(file, partitions)
+# convert the 1d array to a 2d array
+file = sig.ndarr_to_iq(file)
+
+# returns a list of views of the array partitioned into sections of the determined length
+file = sig.partition(file, 128)
 
 builder = DatasetBuilder()
 
-for x in splitfile:
-    reshape_x = np.reshape(x, (2, 128))
-    builder.add(reshape_x, Modulation="WBFM")
-
+for x in file:
+    builder.add(x, Modulation="WBFM")
 
 dataset = builder.build()
 
