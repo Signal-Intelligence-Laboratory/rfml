@@ -4,6 +4,9 @@ import seaborn as sns
 sns.set_style("whitegrid")
 
 import numpy as np
+import sys
+
+sys.path.insert(0, "/home/garrett/Code/rfml")
 
 from rfml.nbutils import plot_IQ
 from rfml.data.converters.rec_urh_single_signal import SingleSignalDataLoader
