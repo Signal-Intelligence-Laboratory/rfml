@@ -56,13 +56,17 @@ class SingleSignalDataLoader(object):
 
     """
     Takes in a 1-D NDArray[] of IQ samples and converts it to be 2-D with I and Q in separate arrays at the same index.
-    This is a direct copy from how URH does this conversion
+
+    Also takes a string of 'F', 'C', or 'A' which are used in numpy.reshape() function
+
+    URH defaults to C-like index order with reshape, should be string 'C'
+    Output files from GNU Radio, however, utilize Fortran indexing (real, imag, real, imag, etc.), so string is 'F'
     """
-    def ndarr_to_iq(self, arr: np.ndarray) -> np.ndarray:
+    def ndarr_to_iq(self, arr: np.ndarray, order='C') -> np.ndarray:
         if len(arr) % 2 == 0:
-            arr = arr.reshape((2, -1), order="C")
+            arr = arr.reshape((2, -1), order=order)
         else:  # ignore the last half sample to avoid a conversion error
-            arr = arr[:-1].reshape((2, -1), order="C")
+            arr = arr[:-1].reshape((2, -1), order=order)
         return arr
 
     
