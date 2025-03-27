@@ -1,5 +1,8 @@
-# Most of this taken from /examples/signal_classification.py
-# Edited to fit new dataset
+# Plotting Includes
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set_style("whitegrid")
+
 import torch
 import pandas as pd
 import numpy as np
@@ -9,8 +12,9 @@ import sys
 sys.path.insert(0, "/home/garrett/Code/rfml")
 
 # Internal Includes
-from rfml.data import build_dataset, DatasetBuilder, Dataset, Encoder
-from rfml.nn.eval import compute_accuracy
+from rfml.data import DatasetBuilder, Encoder
+from rfml.nn.eval import compute_accuracy, compute_confusion
+from rfml.nbutils import plot_confusion, plot_IQ
 from rfml.nn.model import build_model
 from rfml.nn.train import build_trainer, PrintingTrainingListener
 from rfml.data.converters.rec_urh_single_signal import SingleSignalDataLoader
@@ -64,6 +68,10 @@ trainer(model=model, training=train, validation=val, le=le)
 acc = compute_accuracy(model=model, data=test, le=le)
 print("Overall Testing Accuracy: {:.4f}".format(acc))
 
+cmn = compute_confusion(model=model, data=test, le=le)
 
+title = "Confusion Matrix"
+fig = plot_confusion(cm=cmn, labels=le.labels, title=title)
+plt.show()
 
 
